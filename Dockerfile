@@ -7,7 +7,12 @@ ENV OPEN_WEBUI_PORT=7860
 ENV HOME=/home/user
 ENV DATA_DIR=/app/backend/data
 ENV OPENAI_API_BASE_URL=https://openrouter.ai/api/v1
-# Note: User must set OPENAI_API_KEY in HF Space Secrets
+# Note: It's better to set the real key in HF Secrets
+ENV WEBUI_SECRET_KEY="cortext_secret_key_123"
+ENV WEBUI_NAME="Cortextia"
+ENV SCARF_NO_ANALYTICS=True
+ENV DO_NOT_TRACK=True
+ENV ANONYMIZED_TELEMETRY=False
 
 # Port 7860 is the default for HF Spaces
 EXPOSE 7860
