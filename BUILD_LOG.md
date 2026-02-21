@@ -29,3 +29,11 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Initialized `BUILD_LOG.md`.
     - Created `.agent/workflows/deploy-changes.md` to enforce the "log-before-and-after" policy.
 - **Target**: Local, Hugging Face, GitHub
+
+### [2026-02-21T13:52:00Z] - Customizing WebUI Name (Workflow Test)
+- **Status**: Completed
+- **Changes**: 
+    - Changed `WEBUI_NAME` in `Dockerfile` to "Cortextia AI".
+    - Verified the `deploy-changes` workflow enforcement.
+    - Confirmed naming change live on Hugging Face Space.
+- **Target**: Local, Hugging Face, GitHub
