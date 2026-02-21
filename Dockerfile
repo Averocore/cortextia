@@ -9,7 +9,7 @@ ENV DATA_DIR=/app/backend/data
 ENV OPENAI_API_BASE_URL=https://openrouter.ai/api/v1
 # Note: It's better to set the real key in HF Secrets
 ENV WEBUI_SECRET_KEY="cortext_secret_key_123"
-ENV WEBUI_NAME="Cortextia"
+ENV WEBUI_NAME="Cortextia AI"
 ENV SCARF_NO_ANALYTICS=True
 ENV DO_NOT_TRACK=True
 ENV ANONYMIZED_TELEMETRY=False
