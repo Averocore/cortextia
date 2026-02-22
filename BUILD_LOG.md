@@ -37,3 +37,20 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Verified the `deploy-changes` workflow enforcement.
     - Confirmed naming change live on Hugging Face Space.
 - **Target**: Local, Hugging Face, GitHub
+
+### [2026-02-22T12:45:00Z] - WebUI Customization & Master Plan Review
+- **Status**: In Progress
+- **Changes**: 
+    - Formalized "Master Plan" and "Step 1" documentation in `/Projects`.
+    - Integrated "Step 1" requirements (ENV=dev, API Probe) into the workspace.
+    - Ready for local Docker execution and API discovery.
+- **Target**: Local, Documentation
+- **References**: `Projects/Master Plan/`, `Projects/Step 1 — API Discovery & Validation.md`
+
+### [2026-02-22T15:42:00Z] - Security Hardening: Removing Hardcoded Secrets
+- **Status**: Completed
+- **Changes**: 
+    - Removed `WEBUI_SECRET_KEY` from `Dockerfile`.
+    - Pushed changes to GitHub and Hugging Face.
+    - User instructed to add variables to Hugging Face "Secrets" UI.
+- **Target**: Local, Hugging Face, GitHub
