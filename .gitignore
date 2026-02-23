@@ -5,6 +5,8 @@
 # Data & Databases
 backend/data/
 data/
+!data/OWUI_INDEX.md
+!data/owui_index.json
 *.db
 *.sqlite
 
