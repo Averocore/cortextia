@@ -39,11 +39,12 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
 - **Target**: Local, Hugging Face, GitHub
 
 ### [2026-02-22T12:45:00Z] - WebUI Customization & Master Plan Review
-- **Status**: In Progress
+- **Status**: Completed
 - **Changes**: 
     - Formalized "Master Plan" and "Step 1" documentation in `/Projects`.
-    - Integrated "Step 1" requirements (ENV=dev, API Probe) into the workspace.
-    - Ready for local Docker execution and API discovery.
+    - Added `ENV=dev` and developer flags to `Dockerfile` for API access.
+    - Created `test_api.py` for automated API endpoint discovery.
+    - Installed Python dependencies (`requests`, `python-dotenv`) on host.
 - **Target**: Local, Documentation
 - **References**: `Projects/Master Plan/`, `Projects/Step 1 — API Discovery & Validation.md`
 
@@ -52,5 +53,22 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
 - **Changes**: 
     - Removed `WEBUI_SECRET_KEY` from `Dockerfile`.
     - Pushed changes to GitHub and Hugging Face.
-    - User instructed to add variables to Hugging Face "Secrets" UI.
+    - `WEBUI_SECRET_KEY` and `OPENAI_API_KEY` moved to Hugging Face Secrets UI.
 - **Target**: Local, Hugging Face, GitHub
+
+### [2026-02-22T16:00:00Z] - Local Docker Setup & First Boot
+- **Status**: In Progress
+- **Changes**: 
+    - Fixed `run_local.ps1` to skip rebuild if image already exists.
+    - Fixed duplicate `OPENAI_API_BASE_URL` in `Dockerfile`.
+    - Added `static/` folder permissions to `Dockerfile` to resolve boot-time permission errors.
+    - Configured `WEBUI_ADMIN_EMAIL` and `WEBUI_ADMIN_PASSWORD` in `.env` for auto-admin creation.
+    - Set `ENABLE_SIGNUP=False` in `Dockerfile` to lock down public signups.
+    - Wiped local `data/` folder to force fresh database initialization.
+    - Container successfully started; embedding model (`all-MiniLM-L6-v2`, 931MB) downloading on first boot.
+- **Pending**: 
+    - Confirm login at `http://localhost:7860` with admin credentials.
+    - Generate API Key from Settings → Account.
+    - Add `WEBUI_API_KEY` to `.env` and run `test_api.py` to complete Step 1.
+- **Target**: Local
+- **Next Session**: Resume with Step 1 — API Discovery & Validation.

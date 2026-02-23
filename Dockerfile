@@ -7,7 +7,6 @@ ENV OPEN_WEBUI_PORT=7860
 ENV HOME=/home/user
 ENV DATA_DIR=/app/backend/data
 ENV OPENAI_API_BASE_URL=https://openrouter.ai/api/v1
-ENV OPENAI_API_BASE_URL=https://openrouter.ai/api/v1
 # Note: Set WEBUI_SECRET_KEY and OPENAI_API_KEY in HF Space Secrets
 ENV WEBUI_NAME="Cortextia AI"
 ENV SCARF_NO_ANALYTICS=True
@@ -19,11 +18,13 @@ ENV ENABLE_SIGNUP=False
 # Port 7860 is the default for HF Spaces
 EXPOSE 7860
 
-# Fix permissions for the data directory to allow UID 1000 (HF default user)
+# Fix permissions for data and static directories to allow UID 1000 (HF default user)
 USER root
 RUN mkdir -p $DATA_DIR && \
     chown -R 1000:1000 $DATA_DIR && \
-    chmod -R 777 $DATA_DIR
+    chmod -R 777 $DATA_DIR && \
+    chown -R 1000:1000 /app/backend/open_webui/static && \
+    chmod -R 777 /app/backend/open_webui/static
 
 # Switch to the non-root user (UID 1000)
 USER 1000
