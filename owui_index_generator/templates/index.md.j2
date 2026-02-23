@@ -124,9 +124,25 @@
 
 ## 🌐 Community Catalog
 
+{% if index.tools_available or index.functions_available %}
+### Available Tools
+| Name | Author | Downloads | Description |
+| :--- | :--- | :---: | :--- |
+{% for t in index.tools_available %}
+| [{{ t.name | replace('|', '∣') }}]({{ t.install_url }}) | @{{ t.author }} | {{ "{:,}".format(t.downloads) if t.downloads else '—' }} | {{ (t.description or '—') | truncate(100) | replace('|', '∣') }} |
+{% endfor %}
+
+### Available Functions
+| Name | Type | Author | Description |
+| :--- | :--- | :--- | :--- |
+{% for f in index.functions_available %}
+| [{{ f.name | replace('|', '∣') }}]({{ f.install_url }}) | {{ f.subtype or 'func' }} | @{{ f.author }} | {{ (f.description or '—') | truncate(100) | replace('|', '∣') }} |
+{% endfor %}
+{% else %}
 <!-- COMMUNITY_TOOLS_START -->
-> _Community data not yet loaded. Run `python generate_index.py --community` after Step 3 is complete._
+> _Community data not yet loaded. Run `python generate_index.py --community` to populate._
 <!-- COMMUNITY_TOOLS_END -->
+{% endif %}
 
 ---
 

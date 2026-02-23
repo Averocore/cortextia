@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, str(Path(__file__).parent))
 
 from owui_index_generator.local_api import LocalAPICollector
+from owui_index_generator.collectors.community_scraper import CommunityScraper
 from owui_index_generator.renderers.markdown import render_index, save_index
 from owui_index_generator.schema.extension import OWUIIndex
 
@@ -52,19 +53,19 @@ def print_summary(index: OWUIIndex, md_path: Path | None, json_path: Path | None
     if json_path:
         print(f"   📋  JSON      → {json_path.resolve()}")
     print(divider)
-    print(f"   🤖  Models      : {len(index.models)}")
+    print(f"   🤖  Models        : {len(index.models)}")
 
-    tools_count = len(index.tools_installed)
-    print(f"   🔧  Tools       : {tools_count}" +
-          ("  (install some from openwebui.com/tools!)" if tools_count == 0 else ""))
+    tools_installed = len(index.tools_installed)
+    tools_available = len(index.tools_available)
+    print(f"   🔧  Tools         : {tools_installed} installed / {tools_available} available")
 
-    fn_count = len(index.functions_installed)
-    print(f"   ⚙️   Functions   : {fn_count}" +
-          ("  (install some from openwebui.com/functions!)" if fn_count == 0 else ""))
+    fn_installed = len(index.functions_installed)
+    fn_available = len(index.functions_available)
+    print(f"   ⚙️   Functions     : {fn_installed} installed / {fn_available} available")
 
-    print(f"   📝  Prompts     : {len(index.prompts)}")
-    print(f"   📚  Knowledge   : {len(index.knowledge_bases)}")
-    print(f"   ⏱️   Generated   : {index.generated_at}")
+    print(f"   📝  Prompts       : {len(index.prompts)}")
+    print(f"   📚  Knowledge     : {len(index.knowledge_bases)}")
+    print(f"   ⏱️   Generated     : {index.generated_at}")
     print(divider)
 
 
@@ -76,6 +77,17 @@ def main() -> int:
         "--output-dir", "-o",
         default="./data",
         help="Directory to save output files (default: ./data)"
+    )
+    parser.add_argument(
+        "--community", "-c",
+        action="store_true",
+        help="Scrape community extensions from openwebui.com"
+    )
+    parser.add_argument(
+        "--pages",
+        type=int,
+        default=2,
+        help="Number of community pages to scrape (default: 2)"
     )
     parser.add_argument(
         "--json-only",
@@ -101,14 +113,24 @@ def main() -> int:
     md_path    = output_dir / "OWUI_INDEX.md"
     json_path  = output_dir / "owui_index.json"
 
-    # 1. Collect
+    # 1. Collect Local
     try:
         index = LocalAPICollector().collect()
     except Exception as e:
-        log.error(f"Failed to collect data: {e}")
+        log.error(f"Failed to collect local data: {e}")
         return 1
 
-    # 2. Render & Save Markdown
+    # 2. Collect Community
+    if args.community:
+        try:
+            scraper = CommunityScraper()
+            community_data = scraper.collect_all(max_pages=args.pages)
+            index.tools_available     = community_data["tools"]
+            index.functions_available = community_data["functions"]
+        except Exception as e:
+            log.warning(f"Failed to collect community data: {e}. Proceeding with local only.")
+
+    # 3. Render & Save Markdown
     saved_md = None
     if not args.json_only:
         try:

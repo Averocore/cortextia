@@ -80,7 +80,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
 - **Key Findings**: Fresh install has 0 tools/functions/prompts/knowledge; models list comes from OpenRouter (hundreds of models available).
 - **Target**: Local
 - **References**: `owui_index_generator/`, `samples/`, `Projects/Step 1 — API Discovery & Validation.md`
-
+ 
 ### [2026-02-23T10:51:00Z] - Steps 5 & 6: Markdown Renderer & Orchestrator
 - **Status**: Completed
 - **Changes**: 
@@ -92,3 +92,15 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Verified output: `data/OWUI_INDEX.md` and `data/owui_index.json` were successfully generated.
 - **Target**: Local
 - **References**: `Projects/Steps 5 + 6 — Markdown Renderer & Orchestrator.md`, `generate_index.py`
+
+### [2026-02-23T18:10:00Z] - Step 3: Community Scraper & API Integration
+- **Status**: Completed
+- **Changes**: 
+    - Discovered and integrated the official `api.openwebui.com` JSON endpoint.
+    - Built `owui_index_generator/collectors/community_scraper.py` using direct API calls (bypassing slow HTML scraping).
+    - Added `.venv` isolation for all project dependencies to resolve global environment warnings.
+    - Updated `generate_index.py` with `--community` and `--pages` support.
+    - Updated `index.md.j2` to render rich "Community Catalog" tables with installation links and download stats.
+    - Verified `OWUI_INDEX.md` with 338 models and 40 community extensions (1 page each of Tools/Functions).
+- **Target**: Local
+- **References**: `owui_index_generator/collectors/community_scraper.py`, `OWUI_INDEX.md`
