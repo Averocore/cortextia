@@ -195,3 +195,42 @@ class Tools:
         )
 
         return "\n".join(lines)
+
+    def get_index_summary(self) -> str:
+        """
+        Get a high-level summary of the extension index — how many tools, 
+        functions, models, and community extensions are cataloged.
+
+        Use this when a user asks "what do we have?" or "show me the overview."
+
+        :return: Summary statistics of the extension index.
+        """
+        index = self._load_index()
+        if not index:
+            return "⚠️ Extension index not found."
+
+        tools = len(index.get("tools_installed", []))
+        functions = len(index.get("functions_installed", []))
+        models = len(index.get("models", []))
+        prompts = len(index.get("prompts", []))
+        knowledge = len(index.get("knowledge_bases", []))
+        
+        comm_tools = len(index.get("tools_available", []))
+        comm_funcs = len(index.get("functions_available", []))
+
+        generated = index.get("generated_at", "unknown")
+
+        return (
+            f"## 📊 Extension Index Summary\n\n"
+            f"**Last generated:** {generated}\n\n"
+            f"| Category | Count |\n"
+            f"|----------|-------|\n"
+            f"| Installed Tools | {tools} |\n"
+            f"| Installed Functions | {functions} |\n"
+            f"| Available Models | {models} |\n"
+            f"| Prompts | {prompts} |\n"
+            f"| Knowledge Bases | {knowledge} |\n"
+            f"| Community Tools (catalog) | {comm_tools} |\n"
+            f"| Community Functions (catalog) | {comm_funcs} |\n"
+            f"| **Total Cataloged** | **{tools + functions + models + prompts + knowledge + comm_tools + comm_funcs}** |\n"
+        )

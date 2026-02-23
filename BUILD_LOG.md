@@ -104,6 +104,15 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Verified `OWUI_INDEX.md` with 338 models and 40 community extensions (1 page each of Tools/Functions).
 - **Target**: Local
 - **References**: `owui_index_generator/collectors/community_scraper.py`, `OWUI_INDEX.md`
+
+### [2026-02-23T18:14:00Z] - Deep Community Sync (Phase 2 Data Validation)
+- **Status**: Completed
+- **Changes**: 
+    - Triggered a massive crawl (15+ pages per type) to stress-test the renderer and search logic.
+    - **Final Count**: 338 models + 749 community tools + 1,102 community functions = **2,189 cataloged items** (filtered down to **1,851** unique active entries).
+    - Verified `owui_index.json` size: 4.2MB.
+- **Target**: Local
+- **References**: `data/owui_index.json`
  
 ### [2026-02-23T18:25:00Z] - Documentation Automation & Workflow Hardening
 - **Status**: Completed
@@ -114,3 +123,17 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Updated `.agent/workflows/deploy-changes.md` to mandate script index and index-regeneration checks during deployment.
 - **Target**: Local, GitHub, Hugging Face
 - **References**: `SCRIPTS_INDEX.md`, `.agent/workflows/`
+
+### [2026-02-23T18:50:00Z] - Stage 2: Knowledge, Search & Advisor Integration
+- **Status**: Completed
+- **Changes**: 
+    - Implemented `owui_index_generator/uploaders/knowledge_sync.py` to automate RAG ingestion (handles JSON-item-wrapping for API consistency).
+    - Implemented `owui_index_generator/tools/extension_search.py` (Search Tool) with surgical JSON metadata parsing and relevance scoring.
+    - Implemented `owui_index_generator/tools/index_regenerator.py` (Action Tool) to enable UI-triggered index updates.
+    - Created `Projects/ADVISOR_SETUP_GUIDE.md` with a 3-step integration workflow and the full Reasoning System Prompt for the Advisor Agent.
+    - Verified `extension_search.py` logic locally against a 1,851-item dataset.
+- **Deferred Items**:
+    - **Step 7E (Scheduled Regeneration)**: Deferred to a future session. Current focus is on session-based manual/semi-automated management.
+    - **Bonus (GitHub Repos Collector)**: Deferred to Phase 3. The current community API provides sufficient initial coverage.
+- **Target**: Local, GitHub, Hugging Face
+- **References**: `Stage 2 Agent Integration & Autonomous Maintenance.md`

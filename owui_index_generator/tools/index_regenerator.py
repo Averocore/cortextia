@@ -158,7 +158,32 @@ class Tools:
             with open(json_path, "w", encoding="utf-8") as f:
                 json.dump(index_data, f, indent=2)
             
-            report.append(f"\n✅ **Index Saved**: `{json_path}`")
+            # --- Render Markdown ---
+            md_path = os.path.join(out_dir, "OWUI_INDEX.md")
+            md_lines = [
+                "# 🧩 Open WebUI Extension Index",
+                f"\n*Auto-generated at {index_data['generated_at']}*",
+                "\n---",
+                "\n## 📊 Summary",
+                "\n| Category | Count |",
+                "| :--- | ---: |",
+                f"| Models | {len(index_data.get('models', []))} |",
+                f"| Tools (Installed) | {len(index_data.get('tools_installed', []))} |",
+                f"| Functions (Installed) | {len(index_data.get('functions_installed', []))} |",
+                f"| Community Tools | {len(index_data.get('tools_available', []))} |",
+                f"| Community Functions | {len(index_data.get('functions_available', []))} |",
+            ]
+
+            md_lines.append("\n---\n\n## 🔧 Tools — Community Catalog")
+            md_lines.append("| Name | Description | Install |")
+            md_lines.append("| :--- | :--- | :--- |")
+            for t in index_data.get("tools_available", [])[:50]: # Limit for performance
+                md_lines.append(f"| {t['name']} | {t['description'][:100]} | [Link]({t['install_url']}) |")
+
+            with open(md_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(md_lines))
+
+            report.append(f"\n✅ **Index Saved**: `{json_path}` and `{md_path}`")
             report.append(f"**Finished**: {datetime.now(timezone.utc).isoformat()}")
             
             return "\n".join(report)

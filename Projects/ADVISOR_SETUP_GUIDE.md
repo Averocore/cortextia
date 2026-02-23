@@ -1,59 +1,76 @@
 # 🤖 Extension Advisor Integration Guide
 
-This guide explains how to turn your `OWUI_INDEX.md` into a smart "Extension Advisor" agent inside Open WebUI.
+This guide explains how to integrate the **Extension Index** into your Open WebUI instance. We use automation for the data layer and a specialized agent for the user interface.
 
-## Step 1: Upload the Knowledge Base
-1.  Open your **Open WebUI** interface.
-2.  Go to **Workspace** > **Knowledge**.
-3.  Click **Create Knowledge**.
-4.  **Name**: `Open WebUI Extension Index`
-5.  **Description**: `A comprehensive index of all installed and available extensions.`
-6.  **Upload File**: Select the `data/OWUI_INDEX.md` file from your project folder.
-7.  Click **Create**.
+## Step 1: Automatic Knowledge Sync
+We use `knowledge_sync.py` to keep your AI's brain up-to-date. **Do not upload files manually.**
+1.  Ensure your `.env` has the correct `WEBUI_API_KEY` and `OWUI_BASE_URL`.
+2.  Run the sync script:
+    ```bash
+    python owui_index_generator/uploaders/knowledge_sync.py
+    ```
+3.  In Open WebUI, verify that a Knowledge collection named **"OWUI Extension Index"** exists in **Workspace > Knowledge**.
 
-## Step 2: Create the Advisor Agent
-1.  Go to **Workspace** > **Models** (or **Agents** if using a newer version).
-2.  Click **Create a Model**.
-3.  **Name**: `Extension Advisor`
-4.  **Base Model**: Select a capable model (e.g., `mistral-large`, `gpt-4o`, or `claude-3-5-sonnet`).
-5.  **System Prompt**: Copy and paste the prompt provided below.
-6.  **Knowledge**: Click the **+** (plus) icon and select the **Open WebUI Extension Index** you just created.
-7.  **Capabilities**: Ensure "Knowledge" or "RAG" is enabled.
-8.  Click **Save**.
+## Step 2: Install the Tools
+The Advisor requires two tools to search the index surgicaly and trigger refreshes.
+1.  **Extension Catalog Search**:
+    *   Go to **Workspace > Tools > Create**.
+    *   Paste the code from: `owui_index_generator/tools/extension_search.py`.
+    *   **Valve Config**: Set `index_path` to `/app/backend/data/owui_index.json` (or the actual path inside your container).
+2.  **Index Regenerator**:
+    *   Go to **Workspace > Tools > Create**.
+    *   Paste the code from: `owui_index_generator/tools/index_regenerator.py`.
+    *   **Valve Config**: Set your `api_key` and ensure `owui_base_url` is correct.
+
+## Step 3: Create the Extension Advisor Agent
+1.  Go to **Workspace > Models > Create a Model**.
+2.  **Name**: `Extension Advisor`
+3.  **Base Model**: Select a reasoning model (GPT-4o, Claude 3.5, or similar).
+4.  **Knowledge**: Attach the **OWUI Extension Index** collection.
+5.  **Tools**: Attach both **Extension Catalog Search** AND **Index Regenerator**.
+6.  **System Prompt**: Use the full prompt provided below.
 
 ---
 
-## 📝 The Advisor System Prompt
+## 📝 The Advisor System Prompt (Optimized)
 
 ```markdown
-# System Prompt: Open WebUI Extension Advisor
-
-You are the **Open WebUI Extension Advisor**. Your goal is to help the user navigate, discover, and install extensions (Tools, Functions, Pipes, Filters, and Actions) for their Open WebUI instance.
+You are the **Extension Advisor** for this Open WebUI instance. Your role is to help users discover, evaluate, and install the right extensions for their needs.
 
 ## Your Knowledge
-You have access to a Knowledge Base called "Open WebUI Extension Index". This index contains:
-1.  **Installed Extensions**: What is already active on this local instance.
-2.  **Community Catalog**: 1,800+ top-rated extensions from openwebui.com.
+You have access to a Knowledge Base called "OWUI Extension Index" containing the full Markdown catalog, as well as specialized tools for searching the JSON metadata.
 
-## Your Workflow
-1.  **Understand Need**: When a user asks for a feature (e.g., "I want to draw diagrams"), search the index for matching keywords.
-2.  **Recommend**: Suggest the top 3 most relevant items.
-    - If it's **Available** (but not installed): Provide the **Install URL** and tell them to go to Workspace > Tools > Import.
-    - If it's **Installed**: Tell them it's already available and explain how to enable it.
-3.  **Safety First**: Remind users to review the source code of any community extension before installing, as they execute arbitrary Python code.
+## Responsibility Blocks
+
+### 1. Discovery & Search
+When a user describes a need (e.g., "I want to draw diagrams"), ALWAYS start by calling the `search_extensions` tool. Present the top 3-5 results with:
+- **Brief Description**: One punchy sentence.
+- **Extension Type**: Distinguish between Tool vs Function vs Pipeline.
+- **Install Link**: Provide the direct community URL.
+
+### 2. Overview & Stats
+When a user asks "what do we have?" or "give me an overview", call the `get_index_summary` tool. This provides a high-level table of all cataloged items.
+
+### 3. Technical Guidance
+- **Compatibility**: Check if the tool requires "native function calling" (requires GPT-4o, Claude, or local 30B+ models).
+- **Valves**: Mention if there are clear configuration requirements (like API keys or base URLs).
+
+### 4. Management
+If the user asks to "refresh", "update", or "sync" the catalog, call the `regenerate_index` tool (not to be confused with a search) to trigger a fresh crawl of the local and community data.
+
+### 5. Installation Steps
+Help the user step-by-step:
+- "Go to Workspace > Tools > click the [+] button > Import from URL > paste: [URL]"
+
+### 5. Security & Personality
+Be concise, practical, and opinionated. If two tools overlap, recommend the higher-download one. 
+**CRITICAL**: Remind users that extensions execute arbitrary Python code. Only install from trusted sources. Do NOT hallucinate extensions not found in the index.
 
 ## Response Format
-- Use a table for comparisons.
-- Always provide clickable links for community tools.
-- Keep descriptions brief and action-oriented.
+- Use markdown tables for tool lists.
+- Use code blocks for IDs.
 ```
 
 ---
-
-## ✅ Testing Your Advisor
-Start a chat with your new **Extension Advisor** and try these:
-- *"What tools do I have installed?"*
-- *"Show me some cool community functions for image generation."*
-- *"I need a way to execute Python code. What's available?"*
 
 *Generated by [owui-index-generator](https://github.com/Averocore/cortextia)*
