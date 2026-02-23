@@ -1,0 +1,87 @@
+## 🔍 Search Results for: "search"
+
+Found **9** matching extensions:
+
+### 1. Web Search
+- **Type:** 🌐 Community Tool
+- **ID:** `238777c6-92f1-40c2-bb54-a18aed2eb50c`
+- **Description:** Web Search using SearXNG and Scrap first N Pages...
+- **Status:** 📥 Available
+- **Author:** @constliakos
+- **Downloads:** 50,991
+- **Action:** Install → https://openwebui.com/t/constliakos/238777c6-92f1-40c2-bb54-a18aed2eb50c
+
+### 2. Live Search
+- **Type:** 🌐 Community Function
+- **ID:** `862eceef-4c77-4482-89b4-3a17faf5bdcf`
+- **Description:** Allows directly searching web engines. Currently Supports SearxNG, DuckDuckGo (Scraping), Google (Scraping). Not any eng...
+- **Status:** 📥 Available
+- **Author:** @atgehrhardt
+- **Downloads:** 20,757
+- **Action:** Install → https://openwebui.com/f/atgehrhardt/862eceef-4c77-4482-89b4-3a17faf5bdcf
+
+### 3. Auto Web Search
+- **Type:** 🌐 Community Tool
+- **ID:** `943f2a80-bb2d-496e-adc3-a93ade450656`
+- **Description:** make native automated web searches using the built-in web search engine...
+- **Status:** 📥 Available
+- **Author:** @nokodo
+- **Downloads:** 4,597
+- **Action:** Install → https://openwebui.com/t/nokodo/943f2a80-bb2d-496e-adc3-a93ade450656
+
+### 4. Web Search and Crawl tool
+- **Type:** 🌐 Community Tool
+- **ID:** `885852f7-ebeb-472a-9b4c-31401197198b`
+- **Description:** Search and Crawls the web using the Open WebUI native search, SearXNG, and Crawl4AI. Extracts content from URLs using a ...
+- **Status:** 📥 Available
+- **Author:** @alexismadd
+- **Downloads:** 1,914
+- **Action:** Install → https://openwebui.com/t/alexismadd/885852f7-ebeb-472a-9b4c-31401197198b
+
+### 5. OpenRouter Integration for Open WebUI: 350+ models, direct uploads (files+images), native tools, OpenRouter Search, multimodal chat, and production-grade routing
+- **Type:** 🌐 Community Function
+- **ID:** `9ac806c5-c7e3-4710-9ff3-ec900739b6db`
+- **Description:** Connects Open-WebUI to OpenRouter and brings a Responses-style API layer to Open-WebUI, access GPT‑5.2, o3, o1, and 350+...
+- **Status:** 📥 Available
+- **Author:** @borisbakchiev115613a429
+- **Downloads:** 655
+- **Action:** Install → https://openwebui.com/f/borisbakchiev115613a429/9ac806c5-c7e3-4710-9ff3-ec900739b6db
+
+### 6. Complex Anthropic Pipe
+- **Type:** 🌐 Community Function
+- **ID:** `d51d4333-b8fc-48cd-a892-1806b5ca7361`
+- **Description:** A very complex Anthropic API Integration. Can call multiple Tools in a loop and supports Thinking, Caching, PDF, Vision,...
+- **Status:** 📥 Available
+- **Author:** @podden
+- **Downloads:** 460
+- **Action:** Install → https://openwebui.com/f/podden/d51d4333-b8fc-48cd-a892-1806b5ca7361
+
+### 7. SearXNG Search
+- **Type:** 🌐 Community Tool
+- **ID:** `0bbec422-e7aa-41bc-9960-04e3eb4f3342`
+- **Description:** A lightweight, high-speed web search tool that connects directly to your self-hosted SearXNG instance....
+- **Status:** 📥 Available
+- **Author:** @edgarvalles11211604ae
+- **Downloads:** 367
+- **Action:** Install → https://openwebui.com/t/edgarvalles11211604ae/0bbec422-e7aa-41bc-9960-04e3eb4f3342
+
+### 8. Giphy
+- **Type:** 🌐 Community Tool
+- **ID:** `75a6fb13-1c1c-4c58-87bb-60fe78d06186`
+- **Description:** Search gifs from Giphy and display them in the chat....
+- **Status:** 📥 Available
+- **Author:** @elfin8er
+- **Downloads:** 94
+- **Action:** Install → https://openwebui.com/t/elfin8er/75a6fb13-1c1c-4c58-87bb-60fe78d06186
+
+### 9. Chemical Compound Intelligence System - Advanced Chemical Data Retrieval Tool
+- **Type:** 🌐 Community Tool
+- **ID:** `0b529447-7f71-4519-a131-96ff4f94b430`
+- **Description:** A tool for searching chemical properties in PubChem and CAS databases....
+- **Status:** 📥 Available
+- **Author:** @calandock
+- **Downloads:** 74
+- **Action:** Install → https://openwebui.com/t/calandock/0b529447-7f71-4519-a131-96ff4f94b430
+
+---
+⚠️ **Security:** Only install extensions from trusted sources. Review code before importing.

@@ -6,7 +6,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
 - **Timestamp**: ISO 8601
 - **Status**: (Planned | In Progress | Completed | Failed)
 - **Changes**: Summary of modifications
-- **Target**: (Local | Hugging Face | GitHub)
+- **Target(s)**: (Local | Hugging Face | GitHub) [Comma-separated]
 - **Artifacts**: Linked screenshots/logs if applicable
 
 ---
@@ -20,15 +20,15 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Set up GitHub mirror at `Averocore/cortextia`.
     - Added `.gitignore` to prevent secret leaks.
     - Added local development environment helper files (`.env.example`, `run_local.ps1`).
-- **Target**: Local, Hugging Face, GitHub
-- **Artifacts**: [Deployment Verification Screenshot](C:\Users\Jawad\.gemini\antigravity\brain\9ca46e8c-daa2-4d7b-b954-961ea3c6b272\cortextia_running_1771671212981.png)
+- **Target(s)**: Local, Hugging Face, GitHub
+- **Artifacts**: [Deployment Verification Screenshot](artifacts/2026-02-21_cortextia_running.png)
 
 ### [2026-02-21T13:50:00Z] - Logging & Workflow Initialization
 - **Status**: Completed
 - **Changes**: 
     - Initialized `BUILD_LOG.md`.
     - Created `.agent/workflows/deploy-changes.md` to enforce the "log-before-and-after" policy.
-- **Target**: Local, Hugging Face, GitHub
+- **Target(s)**: Local, Hugging Face, GitHub
 
 ### [2026-02-21T13:52:00Z] - Customizing WebUI Name (Workflow Test)
 - **Status**: Completed
@@ -36,7 +36,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Changed `WEBUI_NAME` in `Dockerfile` to "Cortextia AI".
     - Verified the `deploy-changes` workflow enforcement.
     - Confirmed naming change live on Hugging Face Space.
-- **Target**: Local, Hugging Face, GitHub
+- **Target(s)**: Local, Hugging Face, GitHub
 
 ### [2026-02-22T12:45:00Z] - WebUI Customization & Master Plan Review
 - **Status**: Completed
@@ -45,7 +45,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Added `ENV=dev` and developer flags to `Dockerfile` for API access.
     - Created `test_api.py` for automated API endpoint discovery.
     - Installed Python dependencies (`requests`, `python-dotenv`) on host.
-- **Target**: Local, Documentation
+- **Target(s)**: Local, Documentation
 - **References**: `Projects/Master Plan/`, `Projects/Step 1 — API Discovery & Validation.md`
 
 ### [2026-02-22T15:42:00Z] - Security Hardening: Removing Hardcoded Secrets
@@ -54,7 +54,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Removed `WEBUI_SECRET_KEY` from `Dockerfile`.
     - Pushed changes to GitHub and Hugging Face.
     - `WEBUI_SECRET_KEY` and `OPENAI_API_KEY` moved to Hugging Face Secrets UI.
-- **Target**: Local, Hugging Face, GitHub
+- **Target(s)**: Local, Hugging Face, GitHub
 
 ### [2026-02-22T16:00:00Z] - Local Docker Setup & First Boot
 - **Status**: Completed
@@ -66,7 +66,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Set `ENABLE_SIGNUP=False` in `Dockerfile` to lock down public signups.
     - Wiped local `data/` folder to force a fresh database initialization.
     - Container running successfully at `http://localhost:7860`.
-- **Target**: Local
+- **Target(s)**: Local
 
 ### [2026-02-23T10:40:00Z] - Steps 1, 2 & 4: API Discovery, Collector & Schemas
 - **Status**: Completed
@@ -78,7 +78,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
         - `local_api.py` — Live collector that validates API responses and outputs `owui_index.json`.
     - Smoke test passed — collector ran end-to-end cleanly.
 - **Key Findings**: Fresh install has 0 tools/functions/prompts/knowledge; models list comes from OpenRouter (hundreds of models available).
-- **Target**: Local
+- **Target(s)**: Local
 - **References**: `owui_index_generator/`, `samples/`, `Projects/Step 1 — API Discovery & Validation.md`
  
 ### [2026-02-23T10:51:00Z] - Steps 5 & 6: Markdown Renderer & Orchestrator
@@ -90,28 +90,29 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Built `generate_index.py` (orchestrator CLI).
     - Installed `jinja2` and ran `generate_index.py` successfully.
     - Verified output: `data/OWUI_INDEX.md` and `data/owui_index.json` were successfully generated.
-- **Target**: Local
+- **Target(s)**: Local
 - **References**: `Projects/Steps 5 + 6 — Markdown Renderer & Orchestrator.md`, `generate_index.py`
 
 ### [2026-02-23T18:10:00Z] - Step 3: Community Scraper & API Integration
 - **Status**: Completed
 - **Changes**: 
-    - Discovered and integrated the official `api.openwebui.com` JSON endpoint.
-    - Built `owui_index_generator/collectors/community_scraper.py` using direct API calls (bypassing slow HTML scraping).
+    - Integrated community catalog via JSON API (`https://api.openwebui.com/api/v1/posts/search`) and updated scraper to use it directly.
+    - Built `owui_index_generator/collectors/community_scraper.py` using direct API calls.
     - Added `.venv` isolation for all project dependencies to resolve global environment warnings.
     - Updated `generate_index.py` with `--community` and `--pages` support.
     - Updated `index.md.j2` to render rich "Community Catalog" tables with installation links and download stats.
     - Verified `OWUI_INDEX.md` with 338 models and 40 community extensions (1 page each of Tools/Functions).
-- **Target**: Local
+- **Target(s)**: Local
 - **References**: `owui_index_generator/collectors/community_scraper.py`, `OWUI_INDEX.md`
 
 ### [2026-02-23T18:14:00Z] - Deep Community Sync (Phase 2 Data Validation)
 - **Status**: Completed
 - **Changes**: 
     - Triggered a massive crawl (15+ pages per type) to stress-test the renderer and search logic.
-    - **Final Count**: 338 models + 749 community tools + 1,102 community functions = **2,189 cataloged items** (filtered down to **1,851** unique active entries).
+    - **Final Count**: 338 models + 749 community tools + 1,102 community functions = **2,189 cataloged items**.
+    - **Filter Logic**: Deduplicated via `{type}:{author}:{slug}`. Filtered out entries with missing slugs or inactive status. Final count: **1,851 unique active entries**.
     - Verified `owui_index.json` size: 4.2MB.
-- **Target**: Local
+- **Target(s)**: Local
 - **References**: `data/owui_index.json`
  
 ### [2026-02-23T18:25:00Z] - Documentation Automation & Workflow Hardening
@@ -121,19 +122,21 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Drafted `Projects/Documentation Strategy.md` to guide future external user documentation.
     - Created `.agent/workflows/done-for-now.md` to trigger final health checks and doc-syncs at session end.
     - Updated `.agent/workflows/deploy-changes.md` to mandate script index and index-regeneration checks during deployment.
-- **Target**: Local, GitHub, Hugging Face
+- **Target(s)**: Local, GitHub, Hugging Face
 - **References**: `SCRIPTS_INDEX.md`, `.agent/workflows/`
 
 ### [2026-02-23T18:50:00Z] - Stage 2: Knowledge, Search & Advisor Integration
 - **Status**: Completed
 - **Changes**: 
     - Implemented `owui_index_generator/uploaders/knowledge_sync.py` to automate RAG ingestion (handles JSON-item-wrapping for API consistency).
-    - Implemented `owui_index_generator/tools/extension_search.py` (Search Tool) with surgical JSON metadata parsing and relevance scoring.
-    - Implemented `owui_index_generator/tools/index_regenerator.py` (Action Tool) to enable UI-triggered index updates.
+    - Implemented `owui_index_generator/tools/extension_search.py` (Extension Search Tool) with surgical JSON metadata parsing and relevance scoring.
+    - Implemented `owui_index_generator/tools/index_regenerator.py` (Regenerator Tool) to enable UI-triggered index updates.
     - Created `Projects/ADVISOR_SETUP_GUIDE.md` with a 3-step integration workflow and the full Reasoning System Prompt for the Advisor Agent.
-    - Verified `extension_search.py` logic locally against a 1,851-item dataset.
+- **Artifacts**: 
+    - `artifacts/2026-02-23_stage2_tool_test.txt` (Verified `extension_search.py` output)
+    - `artifacts/2026-02-23_knowledge_sync_response.json` (Verified Knowledge API response)
 - **Deferred Items**:
     - **Step 7E (Scheduled Regeneration)**: Deferred to a future session. Current focus is on session-based manual/semi-automated management.
     - **Bonus (GitHub Repos Collector)**: Deferred to Phase 3. The current community API provides sufficient initial coverage.
-- **Target**: Local, GitHub, Hugging Face
+- **Target(s)**: Local, GitHub, Hugging Face
 - **References**: `Stage 2 Agent Integration & Autonomous Maintenance.md`
