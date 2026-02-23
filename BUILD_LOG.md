@@ -57,18 +57,38 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
 - **Target**: Local, Hugging Face, GitHub
 
 ### [2026-02-22T16:00:00Z] - Local Docker Setup & First Boot
-- **Status**: In Progress
+- **Status**: Completed
 - **Changes**: 
-    - Fixed `run_local.ps1` to skip rebuild if image already exists.
+    - Fixed `run_local.ps1` to skip rebuild if image already exists (uses cached image).
     - Fixed duplicate `OPENAI_API_BASE_URL` in `Dockerfile`.
-    - Added `static/` folder permissions to `Dockerfile` to resolve boot-time permission errors.
+    - Added `static/` folder permissions to `Dockerfile` (resolves permission errors on boot).
     - Configured `WEBUI_ADMIN_EMAIL` and `WEBUI_ADMIN_PASSWORD` in `.env` for auto-admin creation.
     - Set `ENABLE_SIGNUP=False` in `Dockerfile` to lock down public signups.
-    - Wiped local `data/` folder to force fresh database initialization.
-    - Container successfully started; embedding model (`all-MiniLM-L6-v2`, 931MB) downloading on first boot.
-- **Pending**: 
-    - Confirm login at `http://localhost:7860` with admin credentials.
-    - Generate API Key from Settings → Account.
-    - Add `WEBUI_API_KEY` to `.env` and run `test_api.py` to complete Step 1.
+    - Wiped local `data/` folder to force a fresh database initialization.
+    - Container running successfully at `http://localhost:7860`.
 - **Target**: Local
-- **Next Session**: Resume with Step 1 — API Discovery & Validation.
+
+### [2026-02-23T10:40:00Z] - Steps 1, 2 & 4: API Discovery, Collector & Schemas
+- **Status**: Completed
+- **Changes**:
+    - Enabled API Keys in Admin Panel; retrieved JWT token as `WEBUI_API_KEY`.
+    - Ran `test_api.py` — all 6 endpoints verified and JSON samples saved to `samples/`.
+    - Built `owui_index_generator/` package structure:
+        - `schema/extension.py` — Full Pydantic schemas for Models, Tools, Functions, Prompts, Knowledge, CommunityExtension, and the unified `OWUIIndex`.
+        - `local_api.py` — Live collector that validates API responses and outputs `owui_index.json`.
+    - Smoke test passed — collector ran end-to-end cleanly.
+- **Key Findings**: Fresh install has 0 tools/functions/prompts/knowledge; models list comes from OpenRouter (hundreds of models available).
+- **Target**: Local
+- **References**: `owui_index_generator/`, `samples/`, `Projects/Step 1 — API Discovery & Validation.md`
+
+### [2026-02-23T10:51:00Z] - Steps 5 & 6: Markdown Renderer & Orchestrator
+- **Status**: Completed
+- **Changes**: 
+    - Skipped Step 3 (community scraper) for now per plan — Steps 5+6 deliver the first working MVP.
+    - Built `owui_index_generator/templates/index.md.j2` (Jinja2 template) with graceful empty states.
+    - Built `owui_index_generator/renderers/markdown.py` (Jinja2 renderer).
+    - Built `generate_index.py` (orchestrator CLI).
+    - Installed `jinja2` and ran `generate_index.py` successfully.
+    - Verified output: `data/OWUI_INDEX.md` and `data/owui_index.json` were successfully generated.
+- **Target**: Local
+- **References**: `Projects/Steps 5 + 6 — Markdown Renderer & Orchestrator.md`, `generate_index.py`
