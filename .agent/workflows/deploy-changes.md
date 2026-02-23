@@ -6,12 +6,15 @@ description: Deploy changes to Hugging Face and GitHub mirrors
 
 This workflow MUST be followed for every deployment or significant code change. It enforces the "Update-Before-Change" and "Update-After-Change" logging policy.
 
-## Step 1: Initialize Log Entry
+## Step 1: Initialize Log Entry & Documentation
 Before making any changes to `Dockerfile`, `README.md`, or project configuration:
 1. Open `BUILD_LOG.md`.
 2. Add a new entry with the current timestamp.
 3. Set **Status** to `In Progress`.
-4. Describe the **Planned Changes**.
+4. **Synchronize Documentation**:
+    - Update `SCRIPTS_INDEX.md` if any new files were added.
+    - Refresh `OWUI_INDEX.md` if the generator logic was modified.
+5. Describe the **Planned Changes**.
 
 ## Step 2: Implementation & Local Validation
 // turbo

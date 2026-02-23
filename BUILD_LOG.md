@@ -104,3 +104,13 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - Verified `OWUI_INDEX.md` with 338 models and 40 community extensions (1 page each of Tools/Functions).
 - **Target**: Local
 - **References**: `owui_index_generator/collectors/community_scraper.py`, `OWUI_INDEX.md`
+ 
+### [2026-02-23T18:25:00Z] - Documentation Automation & Workflow Hardening
+- **Status**: Completed
+- **Changes**: 
+    - Created `SCRIPTS_INDEX.md` at project root to catalog all created scripts and their purposes.
+    - Drafted `Projects/Documentation Strategy.md` to guide future external user documentation.
+    - Created `.agent/workflows/done-for-now.md` to trigger final health checks and doc-syncs at session end.
+    - Updated `.agent/workflows/deploy-changes.md` to mandate script index and index-regeneration checks during deployment.
+- **Target**: Local, GitHub, Hugging Face
+- **References**: `SCRIPTS_INDEX.md`, `.agent/workflows/`
