@@ -1,0 +1,8 @@
+# Nightly fast sync at 02:15 UTC (1 page)
+15 2 * * * python3 /app/backend/data/sync_index.py --profile nightly >> /app/backend/data/artifacts/sync_index_nightly.log 2>&1
+
+# Weekly medium sync at 03:15 UTC on Sunday (5 pages)
+15 3 * * 0 python3 /app/backend/data/sync_index.py --profile weekly >> /app/backend/data/artifacts/sync_index_weekly.log 2>&1
+
+# Monthly deep sync at 04:15 UTC on 1st (15 pages)
+15 4 1 * * python3 /app/backend/data/sync_index.py --profile monthly >> /app/backend/data/artifacts/sync_index_monthly.log 2>&1

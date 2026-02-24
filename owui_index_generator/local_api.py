@@ -36,7 +36,7 @@ class LocalAPICollector:
     """Fetches all installed content from a running Open WebUI instance."""
 
     def __init__(self, base_url: str | None = None, api_key: str | None = None):
-        self.base_url = (base_url or os.getenv("WEBUI_URL", "http://localhost:7860")).rstrip("/")
+        self.base_url = (base_url or os.getenv("OWUI_BASE_URL") or os.getenv("WEBUI_URL") or "http://localhost:7860").rstrip("/")
         self.api_key  = api_key or os.getenv("WEBUI_API_KEY", "")
         self.session  = requests.Session()
         self.session.headers.update({

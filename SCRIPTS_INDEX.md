@@ -12,6 +12,10 @@ It tracks all key scripts and modules, documenting their purpose and functionali
 | `owui_index_generator/collectors/community_scraper.py` | **Step 3** | Fetches available Tools and Functions from the official Open WebUI Community API. |
 | `owui_index_generator/renderers/markdown.py` | **Step 5** | Renders an OWUIIndex object into OWUI_INDEX.md using Jinja2. |
 | `owui_index_generator/schema/extension.py` | **Pydantic schemas for Open WebUI extensions.** | Designed from real API response samples (Step 1D output). |
+| `sync_index.py` | **Stage 3 Orchestrator** | One-shot sync: Regenerates index, runs Knowledge sync, validates output, and logs auditable artifacts. Supports `--profile` (nightly/weekly/monthly). |
+| `owui_index_generator/tools/extension_search.py` | **Advisor Tool** | Surgical search across models, tools, functions, and prompts. Implements relevance scoring and tie-breaking. |
+| `owui_index_generator/tools/index_regenerator.py` | **Advisor Tool** | UI-triggered index update with atomic writes, concurrency, and API retry logic. |
+| `owui_index_generator/uploaders/knowledge_sync.py` | **Step 7** | Automates the upload/replacement of index files into an Open WebUI Knowledge collection for RAG. |
 | `owui_index_generator/maintenance/doc_sync.py` | **Step 9** | Automates the maintenance of SCRIPTS_INDEX.md by scanning the project and extracting purpose/functionality from script headers. |
 ## Directory Structure Summary
 - `owui_index_generator/`: Core package containing the logic.

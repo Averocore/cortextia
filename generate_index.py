@@ -19,6 +19,10 @@ import sys
 from pathlib import Path
 from datetime import datetime, timezone
 
+if sys.platform == "win32":
+    import codecs
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # Add the project root to path
 sys.path.insert(0, str(Path(__file__).parent))
 

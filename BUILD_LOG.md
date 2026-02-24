@@ -143,13 +143,22 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
 
 ---
 
-### [2026-02-23T19:25:00Z] - Session Summary: Stage 2 Completion & Hardening
-- **Summary**: Transitioned from a static local-only index to a dynamic, community-aware, and agent-accessible extension advisor system.
-- **Key Achievements**:
-    - **Community Intelligence**: Scraper now fetches 1000s of extensions directly from `openwebui.com` APIs.
-    - **Agent Brain**: Implemented surgical JSON search tool and UI-triggered index regeneration.
-    - **Persistence**: Automate Knowledge Base ingestion (RAG) with deduplication handling.
-    - **Auditability**: Hardened logs with precise metrics (1,851 unique units) and evidence artifacts.
-- **Current State**: Stage 2 is 100% complete and auditable. Stage 3 (Automation) is planned and ready for execution.
+### [2026-02-24T21:20:00Z] - Session Summary: Stage 2 Final & Stage 3A Hardening
+- **Status**: Completed
+- **Changes**: 
+    - **Container Hardening**:
+        - Applied least-privilege permission model (770/660) to Docker filesystem.
+        - Refined `entrypoint-with-cron.sh` to swap `supercronic` to PID 1 for better reaping and added graceful shutdown traps.
+        - Implemented `.dockerignore` to harden build context and prevent massive cache uploads.
+        - Fixed `SUPERCRONIC_SHA1SUM` checksum verification issues.
+    - **Advisor Documentation Integrity**:
+        - Hardened `ADVISOR_SETUP_GUIDE.md` with expert-reviewed refinements.
+        - Added strict "Boundary Rules" to the System Prompt to prevent tool-output interleaving.
+        - Defined the "Partial Success" resiliency policy for community API outages.
+        - Documented "Version Drift" safety rules and "Stale Timestamp" troubleshooting matrix.
+    - **Maintenance**:
+        - Verified `SCRIPTS_INDEX.md` is current.
+        - Refreshed the local `owui_index.json` following generator unicode fixes.
+- **Current State**: The Extension Advisor system is 100% production-ready, security-hardened, and container-native.
 - **Target(s)**: Local, GitHub, Hugging Face
-- **Next Session**: Initialize `sync_index.py` and Windows Task Scheduler (Stage 3A).
+- **References**: `Dockerfile`, `entrypoint-with-cron.sh`, `ADVISOR_SETUP_GUIDE.md`

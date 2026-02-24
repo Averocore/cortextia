@@ -162,7 +162,7 @@ class KnowledgeSync:
 
 
 def main():
-    base_url = os.getenv("OWUI_BASE_URL", "http://localhost:7860")
+    base_url = os.getenv("OWUI_BASE_URL") or os.getenv("WEBUI_URL") or "http://localhost:7860"
     api_key = os.getenv("WEBUI_API_KEY", "")
 
     if not api_key:

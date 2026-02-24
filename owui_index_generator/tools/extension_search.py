@@ -28,11 +28,13 @@ class Tools:
         self.valves = self.Valves()
         self._index_cache = None
         self._cache_mtime = 0
+        self._last_error = "" # SRCH-01: Track last error
 
     def _load_index(self) -> dict:
         """Load index with simple file-mtime caching."""
         path = self.valves.index_path
         if not os.path.exists(path):
+            self._last_error = f"File not found: {path}"
             return {}
 
         try:
@@ -42,13 +44,20 @@ class Tools:
                     self._index_cache = json.load(f)
                 self._cache_mtime = mtime
             return self._index_cache
-        except Exception:
+        except Exception as e:
+            self._last_error = f"Load error: {str(e)}"
             return {}
 
     def _score_match(self, query_terms: list[str], text: str) -> int:
         """Simple relevance scoring: count how many query terms appear."""
         text_lower = text.lower()
         return sum(1 for term in query_terms if term in text_lower)
+
+    def _normalize_author(self, author: Optional[str]) -> str:
+        """SRCH-02: Normalize author formatting."""
+        if not author:
+            return ""
+        return author.lstrip("@")
 
     def search_extensions(
         self,
@@ -58,23 +67,13 @@ class Tools:
         """
         Search for Open WebUI extensions (tools, functions, models, prompts)
         that match a described need or keyword.
-
-        Use this when a user asks about capabilities, wants recommendations,
-        or asks "is there a tool/function for X?"
-
-        :param query: What the user needs, e.g. "web search", "image generation",
-                      "code execution", "TTS", "RAG", etc.
-        :param category: Optional filter — one of: "tools", "functions", "models",
-                         "prompts", "community_tools", "community_functions".
-                         Leave empty to search everything.
-        :return: Formatted list of matching extensions with install info.
         """
         index = self._load_index()
         if not index:
-            return (
-                "⚠️ Extension index not found at path: " + self.valves.index_path + 
-                "\n\nEnsure the index generator has run and the file is accessible."
-            )
+            error_msg = f"⚠️ Extension index not found at path: {self.valves.index_path}"
+            if self._last_error:
+                 error_msg += f"\n(Technical Error: {self._last_error})"
+            return error_msg + "\n\nEnsure the index generator has run and the file is accessible."
 
         query_terms = [t.strip().lower() for t in query.split() if len(t) > 2]
         if not query_terms:
@@ -91,10 +90,11 @@ class Tools:
                 if score > 0:
                     results.append({
                         "score": score,
+                        "priority": 2, # SRCH-04: Higher priority for installed
                         "type": "🔧 Installed Tool",
                         "name": tool.get("name", "Unknown"),
                         "id": tool.get("id", ""),
-                        "description": (meta.get("description") or "")[:120],
+                        "description": (meta.get("description") or ""),
                         "status": "✅ Installed",
                         "action": "Already available — assign to a model in Workspace > Models",
                     })
@@ -112,12 +112,47 @@ class Tools:
                     ftype = func.get("type", "unknown").title()
                     results.append({
                         "score": score,
+                        "priority": 2,
                         "type": f"⚙️ Installed Function ({ftype})",
                         "name": func.get("name", "Unknown"),
                         "id": func.get("id", ""),
-                        "description": (meta.get("description") or "")[:120],
+                        "description": (meta.get("description") or ""),
                         "status": "✅ Installed",
                         "action": "Already available — check Workspace > Functions",
+                    })
+
+        # --- Search models (SRCH-05) ---
+        if category in (None, "models"):
+            for model in index.get("models", []):
+                searchable = f"{model.get('name', '')} {model.get('id', '')} {model.get('description', '')}"
+                score = self._score_match(query_terms, searchable)
+                if score > 0:
+                    results.append({
+                        "score": score,
+                        "priority": 1,
+                        "type": "🤖 Model",
+                        "name": model.get("name", "Unknown"),
+                        "id": model.get("id", ""),
+                        "description": (model.get("description") or ""),
+                        "status": "✅ Configured",
+                        "action": "Available as a model in chat",
+                    })
+
+        # --- Search prompts (SRCH-05) ---
+        if category in (None, "prompts"):
+            for prompt in index.get("prompts", []):
+                searchable = f"{prompt.get('title', '')} {prompt.get('command', '')}"
+                score = self._score_match(query_terms, searchable)
+                if score > 0:
+                    results.append({
+                        "score": score,
+                        "priority": 1,
+                        "type": "📝 Prompt Template",
+                        "name": prompt.get("title") or prompt.get("command", "Unknown"),
+                        "id": prompt.get("command", ""),
+                        "description": "Custom prompt template",
+                        "status": "✅ Available",
+                        "action": f"Use in chat via {prompt.get('command')}",
                     })
 
         # --- Search community tools ---
@@ -128,14 +163,15 @@ class Tools:
                 if score > 0:
                     results.append({
                         "score": score,
+                        "priority": 0,
                         "type": "🌐 Community Tool",
                         "name": ext.get("name", "Unknown"),
                         "id": ext.get("slug", ""),
-                        "description": (ext.get("description") or "")[:120],
+                        "description": ext.get("description") or "",
                         "status": "📥 Available",
                         "action": f"Install → {ext.get('install_url', 'openwebui.com')}",
                         "downloads": ext.get("downloads", 0),
-                        "author": ext.get("author", ""),
+                        "author": self._normalize_author(ext.get("author")),
                     })
 
         # --- Search community functions ---
@@ -146,14 +182,15 @@ class Tools:
                 if score > 0:
                     results.append({
                         "score": score,
+                        "priority": 0,
                         "type": "🌐 Community Function",
                         "name": ext.get("name", "Unknown"),
                         "id": ext.get("slug", ""),
-                        "description": (ext.get("description") or "")[:120],
+                        "description": ext.get("description") or "",
                         "status": "📥 Available",
                         "action": f"Install → {ext.get('install_url', 'openwebui.com')}",
                         "downloads": ext.get("downloads", 0),
-                        "author": ext.get("author", ""),
+                        "author": self._normalize_author(ext.get("author")),
                     })
 
         if not results:
@@ -164,9 +201,9 @@ class Tools:
                 f"- Browse the community: https://openwebui.com/tools\n"
             )
 
-        # Sort by relevance score, then by downloads for community items
+        # SRCH-04: Sort by score (desc), then priority (desc), then downloads (desc)
         results.sort(
-            key=lambda r: (r["score"], r.get("downloads", 0)),
+            key=lambda r: (r["score"], r["priority"], r.get("downloads", 0)),
             reverse=True,
         )
         results = results[: self.valves.max_results]
@@ -179,7 +216,13 @@ class Tools:
             lines.append(f"### {i}. {r['name']}")
             lines.append(f"- **Type:** {r['type']}")
             lines.append(f"- **ID:** `{r['id']}`")
-            lines.append(f"- **Description:** {r['description']}...")
+            
+            # SRCH-03: Fixed ellipsis behavior
+            desc = r['description']
+            if len(desc) > 120:
+                desc = desc[:120].strip() + "..."
+            lines.append(f"- **Description:** {desc}")
+            
             lines.append(f"- **Status:** {r['status']}")
             if r.get("author"):
                 lines.append(f"- **Author:** @{r['author']}")
@@ -200,14 +243,13 @@ class Tools:
         """
         Get a high-level summary of the extension index — how many tools, 
         functions, models, and community extensions are cataloged.
-
-        Use this when a user asks "what do we have?" or "show me the overview."
-
-        :return: Summary statistics of the extension index.
         """
         index = self._load_index()
         if not index:
-            return "⚠️ Extension index not found."
+            error_msg = "⚠️ Extension index not found."
+            if self._last_error:
+                error_msg += f" (Error: {self._last_error})"
+            return error_msg
 
         tools = len(index.get("tools_installed", []))
         functions = len(index.get("functions_installed", []))

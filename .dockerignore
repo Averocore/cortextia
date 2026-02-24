@@ -1,0 +1,44 @@
+# -----------------------------------------------------------------------------
+# Docker build context hardening
+# -----------------------------------------------------------------------------
+# Goal: prevent Docker (BuildKit) from sending runtime caches / model downloads /
+# deep snapshot trees (often with special files) into the build context.
+# This avoids errors like:
+#   invalid file request .../.gitattributes
+# and keeps images smaller + builds faster.
+
+# --- Runtime data / caches (MOST IMPORTANT) ---
+data/
+**/data/
+
+# Common cache directories (HF / embeddings / models / generic)
+**/.cache/
+**/cache/
+**/caches/
+**/hf_cache/
+**/huggingface/
+**/sentence-transformers/
+**/models--*/
+**/snapshots/
+
+# If you keep model caches under a custom path, add it here as well:
+# **/embedding/models/
+
+# --- VCS / editor / OS noise ---
+.git/
+.github/
+.vscode/
+.idea/
+**/.DS_Store
+**/Thumbs.db
+
+# --- Python noise ---
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# --- Docs/build artifacts (optional) ---
+artifacts/
+**/artifacts/
+*.log
