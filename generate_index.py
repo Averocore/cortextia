@@ -129,8 +129,32 @@ def main() -> int:
         try:
             scraper = CommunityScraper()
             community_data = scraper.collect_all(max_pages=args.pages)
-            index.tools_available     = community_data["tools"]
-            index.functions_available = community_data["functions"]
+            
+            # --- Consolidation & Deduplication Logic ---
+            # We identify items by [type:author:slug] to ensure absolute uniqueness.
+            # We also skip items that are already installed locally.
+            
+            installed_tool_ids = {t.id for t in index.tools_installed}
+            installed_func_ids = {f.id for f in index.functions_installed}
+            
+            # Deduplicate Tools
+            unique_tools = {}
+            for t in community_data["tools"]:
+                key = f"tool:{t.author}:{t.slug}"
+                if t.slug not in installed_tool_ids and key not in unique_tools:
+                    unique_tools[key] = t
+            index.tools_available = list(unique_tools.values())
+            
+            # Deduplicate Functions
+            unique_funcs = {}
+            for f in community_data["functions"]:
+                key = f"function:{f.author}:{f.slug}"
+                if f.slug not in installed_func_ids and key not in unique_funcs:
+                    unique_funcs[key] = f
+            index.functions_available = list(unique_funcs.values())
+            
+            log.info(f"Consolidated catalog: {len(index.tools_available)} tools, {len(index.functions_available)} functions.")
+            
         except Exception as e:
             log.warning(f"Failed to collect community data: {e}. Proceeding with local only.")
 

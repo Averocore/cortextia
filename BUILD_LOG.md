@@ -159,6 +159,7 @@ This log tracks all changes, builds, and deployments for the Cortextia project.
     - **Maintenance**:
         - Verified `SCRIPTS_INDEX.md` is current.
         - Refreshed the local `owui_index.json` following generator unicode fixes.
+        - **Implemented Index Deduplication**: Orchestrator now consolidates community extensions by unique key (author + slug) and automatically filters out items already installed locally.
 - **Current State**: The Extension Advisor system is 100% production-ready, security-hardened, and container-native.
 - **Target(s)**: Local, GitHub, Hugging Face
 - **References**: `Dockerfile`, `entrypoint-with-cron.sh`, `ADVISOR_SETUP_GUIDE.md`
